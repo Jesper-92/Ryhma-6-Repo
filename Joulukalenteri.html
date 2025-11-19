@@ -15,43 +15,68 @@
     </div>
 
     <div id="Kalenteri" class="grid">
-        <div class="Luukku" data-day="1">
-            <p>Ensimmäinen päivä</p>
-        </div>
-        <div class="Luukku" data-day="2">
-            <p>Toinen päivä</p>
-        </div>
-        <div class="Luukku" data-day="3"></div>
-        <div class="Luukku" data-day="4"></div>
-        <div class="Luukku" data-day="5"></div>
-        <div class="Luukku" data-day="6"></div>
-        <div class="Luukku" data-day="7"></div>
-        <div class="Luukku" data-day="8"></div>
-        <div class="Luukku" data-day="9"></div>
-        <div class="Luukku" data-day="10"></div>
-        <div class="Luukku" data-day="11"></div>
-        <div class="Luukku" data-day="12"></div>
-        <div class="Luukku" data-day="13"></div>
-        <div class="Luukku" data-day="14"></div>
-        <div class="Luukku" data-day="15"></div>
-        <div class="Luukku" data-day="16"></div>
-        <div class="Luukku" data-day="17"></div>
-        <div class="Luukku" data-day="18"></div>
-        <div class="Luukku" data-day="19"></div>
-        <div class="Luukku" data-day="20"></div>
-        <div class="Luukku" data-day="21"></div>
-        <div class="Luukku" data-day="22"></div>
-        <div class="Luukku" data-day="23"></div>
-        <div class="Luukku" data-day="24"></div>
+        <div class="Luukku" data-day="1"> 1. Päivä</div>
+        <div class="Luukku" data-day="2">2. Päivä</div>
+        <div class="Luukku" data-day="3">3. Päivä</div>
+        <div class="Luukku" data-day="4">4. Päivä</div>
+        <div class="Luukku" data-day="5">5. Päivä</div>
+        <div class="Luukku" data-day="6">6. Päivä</div>
+        <div class="Luukku" data-day="7">7. Päivä</div>
+        <div class="Luukku" data-day="8">8. Päivä</div>
+        <div class="Luukku" data-day="9">9. Päivä</div>
+        <div class="Luukku" data-day="10">10. Päivä</div>
+        <div class="Luukku" data-day="11">11. Päivä</div>
+        <div class="Luukku" data-day="12">12. Päivä</div>
+        <div class="Luukku" data-day="13">13. Päivä</div>
+        <div class="Luukku" data-day="14">14. Päivä</div>
+        <div class="Luukku" data-day="15">15. Päivä</div>
+        <div class="Luukku" data-day="16">16. Päivä</div>
+        <div class="Luukku" data-day="17">17. Päivä</div>
+        <div class="Luukku" data-day="18">18. Päivä</div>
+        <div class="Luukku" data-day="19">19. Päivä</div>
+        <div class="Luukku" data-day="20">20. Päivä</div>
+        <div class="Luukku" data-day="21">21. Päivä</div>
+        <div class="Luukku" data-day="22">22. Päivä</div>
+        <div class="Luukku" data-day="23">23. Päivä</div>
+        <div class="Luukku" data-day="24">Jouluaatto</div>
     </div>
 
     <script>
-        function kalenteri() {
-            const luukut = document.getElementById("Luukku");
-            const tanaan = new Date();
-            const paiva = tanaan.getDate();
-            const avattavaPaiva = Math.min(paiva, 24);
+        function avaaLuukku(luukku) {
+            const paiva = luukku.dataset.day;
+            alert("Luukku " + paiva + " avattu!");
+            // tähän voit lisätä animaation tai sisällön paljastuksen
         }
+
+        // Kun sivu on ladattu
+        document.addEventListener("DOMContentLoaded", () => {
+            const luukut = document.querySelectorAll(".Luukku");
+
+            luukut.forEach(luukku => {
+                luukku.onclick = () => avaaLuukku(luukku);
+                const tanaan = new Date();
+                const paiva = tanaan.getDate();       // esim. 19 → avattavissa 1–19
+                const avattavaPaiva = Math.min(paiva, 24);
+
+                luukut.forEach(luukku => {
+                    const day = Number(luukku.dataset.day);
+
+                    if (day <= avattavaPaiva) {
+                        // sallitaan avaus
+                        luukku.onclick = () => {
+                            alert("Luukku " + day + " avattu!");
+                            luukku.classList.add("avattu");
+                        };
+                    } else {
+                        // estetään avaus
+                        luukku.classList.add("disabled");
+                        luukku.style.pointerEvents = "none"; // ei reagoi klikkaukseen
+                    }
+                });
+            });
+        });
+
+
     </script>
 </body>
 

@@ -28,3 +28,11 @@ body {
     border-radius: 10px;
     cursor: pointer;
 }
+
+.Luukku.disabled {
+    opacity: 0.5;
+}
+
+.Luukku.avattu {
+    text-decoration: line-through;
+}
