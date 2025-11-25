@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Joulukalenteri</title>
+  <style>
+    /* YLEINEN TYYLI */
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #245, #012);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+
+    .app {
+      position: relative;
+      max-width: 900px;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 4px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-size: 1.8rem;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+      opacity: 0.9;
+    }
+
+    .info {
+      text-align: center;
+      font-size: 0.8rem;
+      opacity: 0.8;
+      margin-bottom: 10px;
+    }
+
+    /* KALENTERI */
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(80px, 1fr));
+      gap: 10px;
+    }
+
+    .day {
+      position: relative;
+      aspect-ratio: 3 / 4;
+      background: linear-gradient(135deg, #c30, #f55);
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+      cursor: pointer;
+      overflow: hidden;
+      transform: translateY(0);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.3s ease;
+    }
+
+    .day:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 15px rgba(0,0,0,0.6);
+    }
+
+    .day-number {
+      position: absolute;
+      top: 6px;
+      right: 10px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+
+    .day-label {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.9;
+    }
+
+    /* SISÄLTÖ (kun luukku avataan) */
+
+    .day-content {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 10px;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .day.open .day-content {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .day-message {
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+    }
+
+    .emoji {
+      font-size: 1.6rem;
+      margin-bottom: 4px;
+    }
+
+    /* LUKITUT LUUKUT */
+
+    .day.locked {
+      cursor: not-allowed;
+      background: linear-gradient(135deg, #444, #777);
+    }
+
+    .day.locked::after {
+      content: "🔒";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.8rem;
+      opacity: 0.95;
+    }
+
+    /* Lukitun luukun "ravistus" kun yritetään avata liian aikaisin */
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-4px); }
+      40% { transform: translateX(4px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(3px); }
+      100% { transform: translateX(0); }
+    }
+
+    .day.shake {
+      animation: shake 0.35s linear;
+    }
+
+    /* JOULUINEN ANIMAATIO: LUMISADE */
+
+    .snow-container {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: -1; /* lumi taustalle */
+    }
+
+    .snowflake {
+      position: absolute;
+      top: -10px;
+      font-size: 0.8rem;
+      opacity: 0.7;
+      animation-name: snow-fall;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    @keyframes snow-fall {
+      0% {
+        transform: translateY(-10px);
+        opacity: 0;
+      }
+      10% {
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(110vh);
+        opacity: 0;
+      }
+    }
+
+    /* RESPONSIVE */
+
+    @media (max-width: 700px) {
+      .calendar {
+        grid-template-columns: repeat(4, minmax(70px, 1fr));
+      }
+    }
+
+    @media (max-width: 500px) {
+      .calendar {
+        grid-template-columns: repeat(3, minmax(70px, 1fr));
+      }
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="snow-container" id="snow"></div>
+
+  <div class="app">
+    <h1>Joulukalenteri</h1>
+    <div class="subtitle">Avaa joka päivä yksi luukku ✨</div>
+    <div class="info" id="dateInfo"></div>
+
+    <div class="calendar" id="calendar">
+      <!-- Luukut generoidaan JavaScriptillä -->
+    </div>
+  </div>
+
+  <script>
+    // PIENTÄ KONFIGURAATIOLOGIIKKAA:
+    // Joulukuussa: saa avata vain luukut, joiden numero <= tämän päivän päivämäärä.
+    // Muulloin (testikäyttöä varten): kaikki luukut ovat auki.
+
+    const MESSAGES = [
+      "Muista hymyillä tänään! 😊",
+      "Joulumusiikki soimaan ja kaakao kuppiin ☕",
+      "Kirjoita jollekulle iloinen viesti 💌",
+      "Pieni kävely tekee ihmeitä 🚶‍♀️",
+      "Sytytä kynttilä (turvallisesti!) 🕯️",
+      "Muista kiittää tänään jotakuta 🙏",
+      "Lue luku kirjasta tai runosta 📖",
+      "Pue päälle jokin jouluisa vaate 🧣",
+      "Kuuntele lempijoululaulusi 🎵",
+      "Nauti hetki täysin ilman ruutua 📵",
+      "Kirjoita ylös kolme asiaa, joista olet kiitollinen ✍️",
+      "Soita tai viestitä ystävälle 📱",
+      "Herkkupäivä! Nauti jotain pientä hyvää 🍫",
+      "Katso jouluinen elokuva 🎬",
+      "Koristele jotakin pientä – vaikka työpiste ✨",
+      "Hengitä syvään ja rentoudu hetki 😌",
+      "Suunnittele jokin kiva juttu jouluksi 🎄",
+      "Tee pieni hyvä teko jollekulle ❤️",
+      "Nauti kuppi teetä tai kahvia rauhassa ☕",
+      "Kuuntele lumisateen tai sateen ääniä (tai etsi äänite) 🌧️",
+      "Kirjoita ensi vuoden toiveita ylös 🌟",
+      "Muista myös levätä – se on tärkeää 😴",
+      "Halaa jotakuta (tai itseäsi) 🤗",
+      "Hyvää joulua! ❤️🎄"
+    ];
+
+    const EMOJIS = [
+      "🎄","🎁","⭐","🕯️","❄️","☃️","🦌","🍪","🍫","☕","🧣","🧤",
+      "🌟","🎅","🤶","🎶","🫖","🧁","📖","💌","❤️","✨","🎉","🎊"
+    ];
+
+    function createCalendar() {
+      const calendarEl = document.getElementById("calendar");
+      const dateInfoEl = document.getElementById("dateInfo");
+
+      const today = new Date();
+      const currentDay = today.getDate();
+      const currentMonth = today.getMonth(); // 0 = tammi, 11 = joulu
+
+      // Näytetään pieni infoteksti
+      const dateStr = today.toLocaleDateString("fi-FI", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+
+      if (currentMonth === 11) {
+        dateInfoEl.textContent = `Tänään on ${dateStr}. Voit avata luukut 1–${currentDay}.`;
+      } else {
+        dateInfoEl.textContent = `${dateStr} — ei ole joulukuu, joten kaikki luukut ovat testimielessä avattavissa.`;
+      }
+
+      // Luodaan 24 luukkua
+      for (let day = 1; day <= 24; day++) {
+        const dayEl = document.createElement("div");
+        dayEl.className = "day";
+        dayEl.dataset.day = day;
+
+        const numberEl = document.createElement("div");
+        numberEl.className = "day-number";
+        numberEl.textContent = day;
+
+        const labelEl = document.createElement("div");
+        labelEl.className = "day-label";
+        labelEl.textContent = "Luukku";
+
+        const contentEl = document.createElement("div");
+        contentEl.className = "day-content";
+
+        const emojiEl = document.createElement("div");
+        emojiEl.className = "emoji";
+        emojiEl.textContent = EMOJIS[day - 1] || "🎄";
+
+        const messageEl = document.createElement("div");
+        messageEl.className = "day-message";
+        messageEl.textContent = MESSAGES[day - 1] || "Iloista joulunodotusta!";
+
+        contentEl.appendChild(emojiEl);
+        contentEl.appendChild(messageEl);
+
+        dayEl.appendChild(numberEl);
+        dayEl.appendChild(labelEl);
+        dayEl.appendChild(contentEl);
+
+        // Määritellään, onko luukku lukittu
+        const isDecember = currentMonth === 11;
+        const isUnlocked = !isDecember || day <= currentDay;
+
+        if (!isUnlocked) {
+          dayEl.classList.add("locked");
+        }
+
+        dayEl.addEventListener("click", () => {
+          if (dayEl.classList.contains("locked")) {
+            // Ravistetaan jos yritetään avata liian aikaisin
+            dayEl.classList.remove("shake");
+            void dayEl.offsetWidth; // reset animaatio
+            dayEl.classList.add("shake");
+            return;
+          }
+
+          // Avataan / suljetaan luukku
+          dayEl.classList.toggle("open");
+        });
+
+        calendarEl.appendChild(dayEl);
+      }
+    }
+
+    function createSnow() {
+      const snowContainer = document.getElementById("snow");
+      const flakes = 70; // lumihiutaleiden määrä
+
+      for (let i = 0; i < flakes; i++) {
+        const span = document.createElement("span");
+        span.className = "snowflake";
+        span.textContent = "❄";
+
+        // Satunnainen x-sijainti, animaation kesto ja viive
+        const randomLeft = Math.random() * 100; // vw
+        const duration = 8 + Math.random() * 7; // 8–15 s
+        const delay = Math.random() * 10; // 0–10 s
+
+        span.style.left = `${randomLeft}vw`;
+        span.style.animationDuration = `${duration}s`;
+        span.style.animationDelay = `${delay}s`;
+
+        snowContainer.appendChild(span);
+      }
+    }
+
+    // Käynnistetään
+    createCalendar();
+    createSnow();
+  </script>
+</body>
+</html>
