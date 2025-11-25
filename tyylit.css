@@ -27,10 +27,12 @@ body {
     padding: 40px;
     border-radius: 10px;
     cursor: pointer;
+
 }
 
 .Luukku.disabled {
     opacity: 0.5;
+
 }
 
 .Luukku.avattu {
