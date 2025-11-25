@@ -73,7 +73,7 @@
 
             "Mitä tapahtui kun tontulla jäi lakki kotio? Sillä jäätyi korva tunturilla Korvatunturilla!",
 
-            "Miksi Fazer ei perusta omaa lätkä joukkuettaan?ne tekee niin paljon Omareita!",
+            "Miksi Fazer ei perusta omaa lätkä joukkuettaan? Ne tekee niin paljon Omareita!",
 
             "Miksi Americassa ei oo enään mansikoita? koska John Wayne!!!",
 
@@ -87,9 +87,9 @@
 
             "Muut rokkarit ilahtuivat, mutta Tom Petty!",
 
-            "Mikä on etätyövampyyrin päivän tärkein ateria? tietysti aamupalaveri!",
+            "Mikä on etätyövampyyrin päivän tärkein ateria? Tietysti aamupalaveri!",
 
-            "Mikä oli korona-ajan suosituin komedialeffa?sen nimi on Yskin Kotona!",
+            "Mikä oli korona-ajan suosituin komedialeffa? Sen nimi on Yskin Kotona!",
 
             "Mitä käy kun hipsteri tekee källin? Siitä tulee silloin hupsteri!",
         ];
@@ -101,10 +101,10 @@
             setTimeout(() => {
                 luukku.innerHTML = `<p>${viesti}</p>`;
             }, 600);
-            // tähän voit lisätä animaation tai sisällön paljastuksen
+
         }
 
-        // Kun sivu on ladattu
+
         document.addEventListener("DOMContentLoaded", () => {
             const luukut = document.querySelectorAll(".Luukku");
             const tanaan = new Date();
@@ -115,10 +115,9 @@
                 const day = Number(luukku.dataset.day);
 
                 if (day <= avattavaPaiva) {
-                    // sallitaan avaus
                     luukku.onclick = () => avaaLuukku(luukku);
+
                 } else {
-                    // estetään avaus
                     luukku.classList.add("disabled");
                     luukku.style.pointerEvents = "none";
                 }
