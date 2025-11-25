@@ -44,69 +44,84 @@
     <script>
 
         const viestit = [
-            "Mikä on Maija Mehiläisen isän nimi?"
-            "Faija Mehiläinen",
-            "joka kahvia keittää se hymyjä kylvää",
-            "Mihin ongelmaan ikeassa asioiminen johtaa? 
-            "se johtaa keskivaikeaan asennukseen",
-            "Mikä on maailman suosituin vihannes?"
-            "se on tietty best selleri!",
-            "millaiset talvirenkaat on suklaasta tehdyssä autossa?
-            "no KITKAT!",
-            "ketä olivat maailman ensimmäiset suomalaiset?"
-            "ne oli Alko asukkaita!",
-            "gggg",
-            "ggggg",
-            "gggg",
-            "ggggg",
-            "ggggg",
-            "ggggg",        
-            "ggggg",
-            "ggggg",
-            "ggggg",
-            "ggggg",
-            "gggg",
-            "ggggg",
-            "ggggg",
-            "ggggg",
-            "gggggg",
-            "gdggdg",
-            "gggggg",
-            "gggg"
 
+            "Mikä on Maija Mehiläisen isän nimi? Faija Mehiläinen",
 
-        ]
+            "Joka kahvia keittää se hymyjä kylvää",
+
+            "Mihin ongelmaan ikeassa asioiminen johtaa? Se johtaa keskivaikeaan asennukseen",
+
+            "Mikä on maailman suosituin vihannes? Se on tietty best selleri!",
+
+            "Millaiset talvirenkaat on suklaasta tehdyssä autossa? No KITKAT!",
+
+            "Ketä olivat maailman ensimmäiset suomalaiset? Ne oli Alko asukkaita!",
+
+            "Mikä on kahvin juojan pääkaupunki? Se on kuppikunta!",
+
+            "Mikä ompi italialainen pappi? Se nimi on ei pastori vaan pastari!",
+
+            "Mitä käy kun googlaa sanan matata? No silloin on hakuna matata!",
+
+            "Mikä Teräsmies on aamulla? Se on silloin Heräsmies!",
+
+            "Mikä on kirjolohen äidin nimi? Se on Pirjo Lohi!",
+
+            "Kuka keksi Kuuban ruokakulttuurin? Se oli tietty Fidel Gastro!",
+
+            "Miten koira saa tietää tietoa? No tietty Google-haulla!",
+
+            "Mitä tapahtui kun tontulla jäi lakki kotio? Sillä jäätyi korva tunturilla Korvatunturilla!",
+
+            "Miksi Fazer ei perusta omaa lätkä joukkuettaan?ne tekee niin paljon Omareita!",
+
+            "Miksi Americassa ei oo enään mansikoita? koska John Wayne!!!",
+
+            "Minä oon tekevinäni töitä kun yhtiö on maksavinaan palkkaa!",
+
+            "Miksi Sveitsi on basistin lempimaa? koska se on nelikielinen!",
+
+            "Mikä on maailman eniten matkustava kala? Se on made koska aina näkyy että Made in China ja Made in Finland!",
+
+            "Miksi Darth Vader joutui menemään optikolle? koska ei enään nähnyt Lukea!",
+
+            "Muut rokkarit ilahtuivat, mutta Tom Petty!",
+
+            "Mikä on etätyövampyyrin päivän tärkein ateria? tietysti aamupalaveri!",
+
+            "Mikä oli korona-ajan suosituin komedialeffa?sen nimi on Yskin Kotona!",
+
+            "Mitä käy kun hipsteri tekee källin? Siitä tulee silloin hupsteri!",
+        ];
         function avaaLuukku(luukku) {
             const paiva = luukku.dataset.day;
-            alert("Luukku " + paiva + " avattu!");
+
+            const viesti = viestit[paiva - 1];
+            luukku.classList.add("avattu");
+            setTimeout(() => {
+                luukku.innerHTML = `<p>${viesti}</p>`;
+            }, 600);
             // tähän voit lisätä animaation tai sisällön paljastuksen
         }
 
         // Kun sivu on ladattu
         document.addEventListener("DOMContentLoaded", () => {
             const luukut = document.querySelectorAll(".Luukku");
+            const tanaan = new Date();
+            const paiva = tanaan.getDate();
+            const avattavaPaiva = Math.min(paiva, 24);
 
             luukut.forEach(luukku => {
-                luukku.onclick = () => avaaLuukku(luukku);
-                const tanaan = new Date();
-                const paiva = tanaan.getDate();       // esim. 19 → avattavissa 1–19
-                const avattavaPaiva = Math.min(paiva, 24);
+                const day = Number(luukku.dataset.day);
 
-                luukut.forEach(luukku => {
-                    const day = Number(luukku.dataset.day);
-
-                    if (day <= avattavaPaiva) {
-                        // sallitaan avaus
-                        luukku.onclick = () => {
-                            alert("Luukku " + day + " avattu!");
-                            luukku.classList.add("avattu");
-                        };
-                    } else {
-                        // estetään avaus
-                        luukku.classList.add("disabled");
-                        luukku.style.pointerEvents = "none"; // ei reagoi klikkaukseen
-                    }
-                });
+                if (day <= avattavaPaiva) {
+                    // sallitaan avaus
+                    luukku.onclick = () => avaaLuukku(luukku);
+                } else {
+                    // estetään avaus
+                    luukku.classList.add("disabled");
+                    luukku.style.pointerEvents = "none";
+                }
             });
         });
 

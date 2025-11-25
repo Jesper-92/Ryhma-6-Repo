@@ -20,21 +20,42 @@ body {
 }
 
 .Luukku {
+    width: 180px;
+    height: 180px;
     background: #0cbf0c;
     color: #fff;
     font-weight: bold;
     text-align: center;
-    padding: 40px;
+    padding: 20px;
     border-radius: 10px;
+    align-items: center;
     cursor: pointer;
+    transition: transform 0.6s;
+}
 
+.Luukku.avattu {
+    transform: rotateY(360deg);
+    background-color: rgb(51, 44, 236);
+}
+
+.Luukku p {
+    font-size: 20px;
+    /* kasvattaa tekstin kokoa */
+    line-height: 1.4;
+    /* riviväli */
+    margin: 0;
+    /* poistaa ylimääräiset marginaalit */
+    display: flex;
+    /* venyttää tekstin */
+    align-items: center;
+    /* keskittää pystysuunnassa */
+    justify-content: center;
+    /* keskittää vaakasuunnassa */
+    height: 100%;
+    /* vie koko luukun korkeuden */
 }
 
 .Luukku.disabled {
     opacity: 0.5;
 
-}
-
-.Luukku.avattu {
-    text-decoration: line-through;
 }
