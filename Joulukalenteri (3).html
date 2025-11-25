@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joulukalenteri</title>
+    <link rel="stylesheet" href="tyylit.css">
+</head>
+
+<body>
+
+    <div class="Otsikko">
+        <h1> Joulukalenteri </h1>
+    </div>
+
+    <div id="Kalenteri" class="grid">
+        <div class="Luukku" data-day="1"> 1. Päivä</div>
+        <div class="Luukku" data-day="2">2. Päivä</div>
+        <div class="Luukku" data-day="3">3. Päivä</div>
+        <div class="Luukku" data-day="4">4. Päivä</div>
+        <div class="Luukku" data-day="5">5. Päivä</div>
+        <div class="Luukku" data-day="6">6. Päivä</div>
+        <div class="Luukku" data-day="7">7. Päivä</div>
+        <div class="Luukku" data-day="8">8. Päivä</div>
+        <div class="Luukku" data-day="9">9. Päivä</div>
+        <div class="Luukku" data-day="10">10. Päivä</div>
+        <div class="Luukku" data-day="11">11. Päivä</div>
+        <div class="Luukku" data-day="12">12. Päivä</div>
+        <div class="Luukku" data-day="13">13. Päivä</div>
+        <div class="Luukku" data-day="14">14. Päivä</div>
+        <div class="Luukku" data-day="15">15. Päivä</div>
+        <div class="Luukku" data-day="16">16. Päivä</div>
+        <div class="Luukku" data-day="17">17. Päivä</div>
+        <div class="Luukku" data-day="18">18. Päivä</div>
+        <div class="Luukku" data-day="19">19. Päivä</div>
+        <div class="Luukku" data-day="20">20. Päivä</div>
+        <div class="Luukku" data-day="21">21. Päivä</div>
+        <div class="Luukku" data-day="22">22. Päivä</div>
+        <div class="Luukku" data-day="23">23. Päivä</div>
+        <div class="Luukku" data-day="24">Jouluaatto</div>
+    </div>
+
+    <script>
+
+        const viestit = [
+            "Mikä on Maija Mehiläisen isän nimi?"
+            "Faija Mehiläinen",
+            "joka kahvia keittää se hymyjä kylvää",
+            "Mihin ongelmaan ikeassa asioiminen johtaa? 
+            "se johtaa keskivaikeaan asennukseen",
+            "Mikä on maailman suosituin vihannes?"
+            "se on tietty best selleri!",
+            "millaiset talvirenkaat on suklaasta tehdyssä autossa?
+            "no KITKAT!",
+            "ketä olivat maailman ensimmäiset suomalaiset?"
+            "ne oli Alko asukkaita!",
+            "gggg",
+            "ggggg",
+            "gggg",
+            "ggggg",
+            "ggggg",
+            "ggggg",        
+            "ggggg",
+            "ggggg",
+            "ggggg",
+            "ggggg",
+            "gggg",
+            "ggggg",
+            "ggggg",
+            "ggggg",
+            "gggggg",
+            "gdggdg",
+            "gggggg",
+            "gggg"
+
+
+        ]
+        function avaaLuukku(luukku) {
+            const paiva = luukku.dataset.day;
+            alert("Luukku " + paiva + " avattu!");
+            // tähän voit lisätä animaation tai sisällön paljastuksen
+        }
+
+        // Kun sivu on ladattu
+        document.addEventListener("DOMContentLoaded", () => {
+            const luukut = document.querySelectorAll(".Luukku");
+
+            luukut.forEach(luukku => {
+                luukku.onclick = () => avaaLuukku(luukku);
+                const tanaan = new Date();
+                const paiva = tanaan.getDate();       // esim. 19 → avattavissa 1–19
+                const avattavaPaiva = Math.min(paiva, 24);
+
+                luukut.forEach(luukku => {
+                    const day = Number(luukku.dataset.day);
+
+                    if (day <= avattavaPaiva) {
+                        // sallitaan avaus
+                        luukku.onclick = () => {
+                            alert("Luukku " + day + " avattu!");
+                            luukku.classList.add("avattu");
+                        };
+                    } else {
+                        // estetään avaus
+                        luukku.classList.add("disabled");
+                        luukku.style.pointerEvents = "none"; // ei reagoi klikkaukseen
+                    }
+                });
+            });
+        });
+
+
+    </script>
+</body>
+
+</html>
